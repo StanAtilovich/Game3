@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Game3</string>
+    <string name="MemoryGame">Memory Game</string>
+    <string name="moves_0">Moves: 0</string>
+    <string name="pairs_0_4">Pairs: 0 / 4</string>
+    <string name="easy_4_x_2">Easy(4 x 2)</string>
+    <string name="medium_6_x_3">Medium(6 x 3)</string>
+    <string name="hard_6_x_4">Hard(6 x 4)</string>
+    <string name="refresh">Refresh</string>
+    <string name="choose_new_size">Choose new size</string>
+    <string name="pairs04">Pairs: 0 / 4</string>
+    <string name="pairs09">Pairs: 0 / 9</string>
+    <string name="pairs012">Pairs: 0 / 12</string>
+    <string name="you_already_won">You already won!</string>
+    <string name="invalid_move">Invalid move!</string>
+    <string name="found_a_match">Found a match! Number of pairs found:</string>
+    <string name="congratulations_you_won">Congratulations! You won!</string>
+</resources>
