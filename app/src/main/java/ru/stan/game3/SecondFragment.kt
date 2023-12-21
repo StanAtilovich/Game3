@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -67,6 +68,7 @@ class SecondFragment : Fragment() {
         return view
     }
 
+
     private fun updateGameWithFlip(position: Int) {
         if (memoryGame.haveWonGame()) {
             val message = getString(R.string.you_already_won)
@@ -94,6 +96,7 @@ class SecondFragment : Fragment() {
             if (memoryGame.haveWonGame()) {
                 val message = getString(R.string.congratulations_you_won)
                 Snackbar.make(clRoot, message, Snackbar.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_secondFragment_to_winningFragment)
             }
         }
         tvNumMoves.text = "Moves: ${memoryGame.getNumMoves()}"

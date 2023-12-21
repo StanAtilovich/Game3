@@ -18,5 +18,14 @@
         android:id="@+id/secondFragment"
         android:name="ru.stan.game3.SecondFragment"
         android:label="fragment_second"
-        tools:layout="@layout/fragment_second" />
+        tools:layout="@layout/fragment_second" >
+        <action
+            android:id="@+id/action_secondFragment_to_winningFragment"
+            app:destination="@id/winningFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/winningFragment"
+        android:name="ru.stan.game3.WinningFragment"
+        android:label="fragment_winning"
+        tools:layout="@layout/fragment_winning" />
 </navigation>
