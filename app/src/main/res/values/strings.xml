@@ -15,4 +15,9 @@
     <string name="invalid_move">Invalid move!</string>
     <string name="found_a_match">Found a match! Number of pairs found:</string>
     <string name="congratulations_you_won">Congratulations! You won!</string>
+    <string name="num_pairs">Pairs: %1$d / %2$d</string>
+    <plurals name="num_moves">
+        <item quantity="one">Moves: %d move</item>
+        <item quantity="other">Moves: %d moves</item>
+    </plurals>
 </resources>

@@ -3,6 +3,7 @@ package ru.stan.game3
 import android.animation.ArgbEvaluator
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -24,6 +25,7 @@ import ru.stan.game3.models.BoardSize
 import ru.stan.game3.models.MemoryGame
 
 class SecondFragment : Fragment() {
+    private lateinit var tvTimer: TextView
     private lateinit var clRoot: ConstraintLayout
     private lateinit var tvNumPairs: TextView
     private lateinit var tvNumMoves: TextView
@@ -31,6 +33,91 @@ class SecondFragment : Fragment() {
     private lateinit var memoryGame: MemoryGame
     private var boardSize: BoardSize = BoardSize.EASY
     private lateinit var rvBoard: RecyclerView
+
+    private var score = 100
+    private val timer = object : CountDownTimer(110000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            val secondsLeft = millisUntilFinished / 1000
+            tvTimer.text = "Time: $secondsLeft"
+
+            if (secondsLeft <= 110) {
+                score = 100
+            }
+            if (secondsLeft <= 105) {
+                score = 95
+            }
+            if (secondsLeft <= 100) {
+                score = 90
+            }
+            if (secondsLeft <= 95) {
+                score = 85
+            }
+            if (secondsLeft <= 90) {
+                score = 80
+            }
+            if (secondsLeft <= 85) {
+                score = 75
+            }
+            if (secondsLeft <= 80) {
+                score = 70
+            }
+            if (secondsLeft <= 75) {
+                score = 65
+            }
+            if (secondsLeft <= 70) {
+                score = 60
+            }
+            if (secondsLeft <= 65) {
+                score = 55
+            }
+            if (secondsLeft <= 60) {
+                score = 50
+            }
+            if (secondsLeft <= 55) {
+                score = 45
+            }
+            if (secondsLeft <= 50) {
+                score = 40
+            }
+            if (secondsLeft <= 55) {
+                score = 35
+            }
+            if (secondsLeft <= 45) {
+                score = 30
+            }
+            if (secondsLeft <= 40) {
+                score = 25
+            }
+            if (secondsLeft <= 35) {
+                score = 20
+            }
+
+        }
+
+
+        override fun onFinish() {
+            tvTimer.text = "Time's up! Score: $score"
+            navigateToWinningFragment(score)
+            cancel()
+        }
+    }
+
+    private fun navigateToWinningFragment(score: Int) {
+        val bundle = Bundle()
+        bundle.putInt(ARG_SCORE, score)
+        val winningFragment = WinningFragment()
+        winningFragment.arguments = bundle
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, winningFragment, "winningFragment").commit()
+        timer.cancel()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        tvTimer = view.findViewById(R.id.tvTimer)
+        timer.start()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,7 +148,7 @@ class SecondFragment : Fragment() {
             }
         )
 
-             val recyclerView: RecyclerView = view.findViewById(R.id.rvBoard)
+        val recyclerView: RecyclerView = view.findViewById(R.id.rvBoard)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), boardSize.getWidth())
         recyclerView.adapter = adapter
 
@@ -96,12 +183,13 @@ class SecondFragment : Fragment() {
             if (memoryGame.haveWonGame()) {
                 val message = getString(R.string.congratulations_you_won)
                 Snackbar.make(clRoot, message, Snackbar.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_secondFragment_to_winningFragment)
+                navigateToWinningFragment(score)
             }
         }
         tvNumMoves.text = "Moves: ${memoryGame.getNumMoves()}"
         adapter.notifyDataSetChanged()
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,16 +199,21 @@ class SecondFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_main, menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.mi_refresh -> {
                 if (::memoryGame.isInitialized && memoryGame.getNumMoves() > 0 && !memoryGame.haveWonGame()) {
-                    showAlertDialog("Quit your current game?", null, View.OnClickListener { setUpBoard() })
+                    showAlertDialog(
+                        "Quit your current game?",
+                        null,
+                        View.OnClickListener { setUpBoard() })
                 } else {
                     setUpBoard()
                 }
                 return true
             }
+
             R.id.mi_new_size -> {
                 showNewSizeDialog()
                 return true
@@ -128,8 +221,6 @@ class SecondFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-
 
 
     fun showNewSizeDialog() {
@@ -150,42 +241,62 @@ class SecondFragment : Fragment() {
             setUpBoard()
         })
     }
-    private fun showAlertDialog(title: String, view: View?, positiveClickListener: View.OnClickListener) {
+
+    private fun showAlertDialog(
+        title: String,
+        view: View?,
+        positiveClickListener: View.OnClickListener
+    ) {
         AlertDialog.Builder(requireContext())
             .setTitle(title)
             .setView(view)
             .setNegativeButton("Cancel", null)
-            .setPositiveButton("OK") {_, _->
+            .setPositiveButton("OK") { _, _ ->
                 positiveClickListener.onClick(null)
             }.show()
     }
+
     private fun setUpBoard() {
         when (boardSize) {
             BoardSize.EASY -> {
                 tvNumMoves.text = "Easy: 4 x 2"
                 tvNumPairs.text = "Pairs: 0 / 4"
             }
+
             BoardSize.MEDIUM -> {
                 tvNumMoves.text = "Medium: 6 x 3"
                 tvNumPairs.text = "Pairs: 0 / 9"
             }
+
             BoardSize.HARD -> {
                 tvNumMoves.text = "Hard: 6 x 4"
                 tvNumPairs.text = "Pairs: 0 / 12"
             }
         }
-        tvNumPairs.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_progress_none))
+        tvNumPairs.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_progress_none
+            )
+        )
         memoryGame = MemoryGame(boardSize)
 
-        adapter = MemoryBoardAdapter(requireContext(), boardSize, memoryGame.cards, object: MemoryBoardAdapter.CardClickListener{
-            override fun onCardClicked(position: Int) {
-                updateGameWithFlip(position)
-            }
+        adapter = MemoryBoardAdapter(
+            requireContext(),
+            boardSize,
+            memoryGame.cards,
+            object : MemoryBoardAdapter.CardClickListener {
+                override fun onCardClicked(position: Int) {
+                    updateGameWithFlip(position)
+                }
 
-        })
+            })
         rvBoard.adapter = adapter
         rvBoard.setHasFixedSize(true)
         rvBoard.layoutManager = GridLayoutManager(requireContext(), boardSize.getWidth())
     }
 
+    companion object {
+        const val ARG_SCORE = "score"
+    }
 }
