@@ -27,5 +27,11 @@
         android:id="@+id/winningFragment"
         android:name="ru.stan.game3.WinningFragment"
         android:label="fragment_winning"
-        tools:layout="@layout/fragment_winning" />
+        tools:layout="@layout/fragment_winning" >
+        <action
+            android:id="@+id/action_winningFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/winningFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

@@ -93,8 +93,6 @@ class SecondFragment : Fragment() {
             }
 
         }
-
-
         override fun onFinish() {
             tvTimer.text = "Time's up! Score: $score"
             navigateToWinningFragment(score)

@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 
 class WinningFragment : Fragment() {
     private lateinit var tvScore: TextView
-    private var scoreListener: ScoreListener? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,20 +26,10 @@ class WinningFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         view.findViewById<Button>(R.id.btnBack).setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            findNavController().navigateUp()
+            fragmentManager?.beginTransaction()?.remove(this)?.commit()
         }
     }
-    fun setScoreListener(listener: ScoreListener) {
-        scoreListener = listener
-    }
-    private fun sendScoreBack() {
-        val score = arguments?.getInt("score") ?: 0
-        scoreListener?.onScoreReceived(score)
-    }
-    interface ScoreListener {
-        fun onScoreReceived(score: Int)
-    }
-
-
 }
