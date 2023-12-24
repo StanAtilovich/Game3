@@ -96,6 +96,7 @@ class SecondFragment : Fragment() {
         override fun onFinish() {
             tvTimer.text = "Time's up! Score: $score"
             navigateToWinningFragment(score)
+//            navigateToHomeFragment(score)
             cancel()
         }
     }
@@ -109,6 +110,15 @@ class SecondFragment : Fragment() {
             .replace(R.id.fragment_container, winningFragment, "winningFragment").commit()
         timer.cancel()
     }
+
+//   private fun navigateToHomeFragment(score: Int) {
+//       val bundle = Bundle()
+//       bundle.putInt(ARG_SCORE, score)
+//       val homeFragment = HomeFragment()
+//       homeFragment.arguments = bundle
+//       parentFragmentManager.beginTransaction()
+//           .replace(R.id.fragment_container, homeFragment, "homeFragment").commit()
+//   }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -182,6 +192,7 @@ class SecondFragment : Fragment() {
                 val message = getString(R.string.congratulations_you_won)
                 Snackbar.make(clRoot, message, Snackbar.LENGTH_LONG).show()
                 navigateToWinningFragment(score)
+//                navigateToHomeFragment(score)
             }
         }
         tvNumMoves.text = "Moves: ${memoryGame.getNumMoves()}"

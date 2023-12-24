@@ -1,13 +1,16 @@
 package ru.stan.game3
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 
 class WinningFragment : Fragment() {
@@ -20,6 +23,11 @@ class WinningFragment : Fragment() {
         tvScore = view.findViewById(R.id.tvScore)
         val score = arguments?.getInt("score") ?: 0
         tvScore.text = "Score: $score"
+
+        parentFragmentManager.setFragmentResult(
+            "scoreResult", bundleOf("score" to score)
+        )
+
         return view
     }
 
@@ -29,7 +37,9 @@ class WinningFragment : Fragment() {
 
         view.findViewById<Button>(R.id.btnBack).setOnClickListener {
             findNavController().navigateUp()
-            fragmentManager?.beginTransaction()?.remove(this)?.commit()
+            Handler().postDelayed(
+                { fragmentManager?.beginTransaction()?.remove(this)?.commit() }, 1
+            )
         }
     }
 }
