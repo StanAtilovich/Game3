@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Game3</string>
+    <string name="app_name">Game Scene</string>
     <string name="MemoryGame">Memory Game</string>
     <string name="moves_0">Moves: 0</string>
     <string name="pairs_0_4">Pairs: 0 / 4</string>
