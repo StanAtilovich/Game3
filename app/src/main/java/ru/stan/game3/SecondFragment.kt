@@ -2,6 +2,7 @@ package ru.stan.game3
 
 import android.animation.ArgbEvaluator
 import android.content.ContentValues.TAG
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -17,7 +18,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -34,73 +34,85 @@ class SecondFragment : Fragment() {
     private var boardSize: BoardSize = BoardSize.EASY
     private lateinit var rvBoard: RecyclerView
 
+    private var timeLeft: Long = 0
     private var score = 100
-    private val timer = object : CountDownTimer(110000, 1000) {
-        override fun onTick(millisUntilFinished: Long) {
-            val secondsLeft = millisUntilFinished / 1000
-            tvTimer.text = "Time: $secondsLeft"
+    private lateinit var timer: CountDownTimer
 
-            if (secondsLeft <= 110) {
-                score = 100
-            }
-            if (secondsLeft <= 105) {
-                score = 95
-            }
-            if (secondsLeft <= 100) {
-                score = 90
-            }
-            if (secondsLeft <= 95) {
-                score = 85
-            }
-            if (secondsLeft <= 90) {
-                score = 80
-            }
-            if (secondsLeft <= 85) {
-                score = 75
-            }
-            if (secondsLeft <= 80) {
-                score = 70
-            }
-            if (secondsLeft <= 75) {
-                score = 65
-            }
-            if (secondsLeft <= 70) {
-                score = 60
-            }
-            if (secondsLeft <= 65) {
-                score = 55
-            }
-            if (secondsLeft <= 60) {
-                score = 50
-            }
-            if (secondsLeft <= 55) {
-                score = 45
-            }
-            if (secondsLeft <= 50) {
-                score = 40
-            }
-            if (secondsLeft <= 55) {
-                score = 35
-            }
-            if (secondsLeft <= 45) {
-                score = 30
-            }
-            if (secondsLeft <= 40) {
-                score = 25
-            }
-            if (secondsLeft <= 35) {
-                score = 20
-            }
-
-        }
-        override fun onFinish() {
-            tvTimer.text = "Time's up! Score: $score"
-            navigateToWinningFragment(score)
-//            navigateToHomeFragment(score)
-            cancel()
-        }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putLong("timeLeft", timeLeft)
     }
 
+
+    private fun startTimer(initialTime: Long) {
+        timer = object : CountDownTimer(initialTime, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                timeLeft = millisUntilFinished
+                val secondsLeft = millisUntilFinished / 1000
+                tvTimer.text = "Time: $secondsLeft"
+                updateScore(secondsLeft)
+            }
+
+            override fun onFinish() {
+                tvTimer.text = "Time's up! Score: $score"
+                navigateToWinningFragment(score)
+            }
+        }
+        timer.start()
+    }
+    private fun updateScore(secondsLeft: Long) {
+        if (secondsLeft <= 110) {
+            score = 100
+        }
+        if (secondsLeft <= 105) {
+            score = 95
+        }
+        if (secondsLeft <= 100) {
+            score = 90
+        }
+        if (secondsLeft <= 95) {
+            score = 85
+        }
+        if (secondsLeft <= 90) {
+            score = 80
+        }
+        if (secondsLeft <= 85) {
+            score = 75
+        }
+        if (secondsLeft <= 80) {
+            score = 70
+        }
+        if (secondsLeft <= 75) {
+            score = 65
+        }
+        if (secondsLeft <= 70) {
+            score = 60
+        }
+        if (secondsLeft <= 65) {
+            score = 55
+        }
+        if (secondsLeft <= 60) {
+            score = 50
+        }
+        if (secondsLeft <= 55) {
+            score = 45
+        }
+        if (secondsLeft <= 50) {
+            score = 40
+        }
+        if (secondsLeft <= 55) {
+            score = 35
+        }
+        if (secondsLeft <= 45) {
+            score = 30
+        }
+        if (secondsLeft <= 40) {
+            score = 25
+        }
+        if (secondsLeft <= 35) {
+            score = 20
+        }
+    }
     private fun navigateToWinningFragment(score: Int) {
         val bundle = Bundle()
         bundle.putInt(ARG_SCORE, score)
@@ -110,20 +122,16 @@ class SecondFragment : Fragment() {
             .replace(R.id.fragment_container, winningFragment, "winningFragment").commit()
         timer.cancel()
     }
-
-//   private fun navigateToHomeFragment(score: Int) {
-//       val bundle = Bundle()
-//       bundle.putInt(ARG_SCORE, score)
-//       val homeFragment = HomeFragment()
-//       homeFragment.arguments = bundle
-//       parentFragmentManager.beginTransaction()
-//           .replace(R.id.fragment_container, homeFragment, "homeFragment").commit()
-//   }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tvTimer = view.findViewById(R.id.tvTimer)
-        timer.start()
+
+        if (savedInstanceState != null) {
+            timeLeft = savedInstanceState.getLong("timeLeft")
+            startTimer(timeLeft)
+        } else {
+            startTimer(110000)
+        }
     }
 
 
@@ -203,6 +211,7 @@ class SecondFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
