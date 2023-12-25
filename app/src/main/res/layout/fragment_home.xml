@@ -10,11 +10,11 @@
         android:id="@+id/rbEasy"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="340dp"
         android:text="@string/start_game"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <TextView
         android:id="@+id/tvScore2"
